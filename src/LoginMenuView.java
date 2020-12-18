@@ -1,13 +1,13 @@
+import model.User;
+import model.UserDatabase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class LoginMenuPanel extends JPanel implements ActionListener {
+public class LoginMenuView extends JPanel implements ActionListener {
     private final JTextField userNameField = new JTextField("Enter username");
     private final JTextField passwordField = new JTextField("Enter password");
     private final JButton newUserButton = new JButton("Create new user");
@@ -18,22 +18,28 @@ public class LoginMenuPanel extends JPanel implements ActionListener {
     private final JLabel outputLabel = new JLabel("Välkommen till världens bästa 4-i-rad spel!");
     private final JLabel blankLabel = new JLabel("   ");
 
-    private final Game game;
+    private final GameController gameController;
 
 
-    public LoginMenuPanel() {
-        this.game = new Game(this);
+    public LoginMenuView() {
+        this.gameController = new GameController(this);
         setLayout(new GridLayout(5, 1));
+        setBackground(Color.BLUE);
+        outputLabel.setForeground(Color.WHITE);
         add(outputLabel);
         add(blankLabel);
         add(userNameField);
         add(passwordField);
+        newUserButton.setBackground(new Color(252,35, 35));
         add(newUserButton);
         newUserButton.addActionListener(this);
+        confirmLoginButton.setBackground(new Color(114, 197, 252));
         add(confirmLoginButton);
         confirmLoginButton.addActionListener(this);
+        highScoreButton.setBackground(new Color(255,215,0));
         add(highScoreButton);
         highScoreButton.addActionListener(this);
+        resetHighScore.setBackground(new Color(224, 35, 252));
         add(resetHighScore);
         resetHighScore.addActionListener(this);
 
@@ -61,7 +67,7 @@ public class LoginMenuPanel extends JPanel implements ActionListener {
 
     void loginSuccessful(User user) {
         outputLabel.setText(user + " logged in");
-        game.addUser(user);
+        gameController.addUser(user);
     }
 
     void loginFail() {
@@ -87,7 +93,7 @@ public class LoginMenuPanel extends JPanel implements ActionListener {
     }
 
     private void showHighScore(){
-        JOptionPane.showMessageDialog(this, game.getHighScoreString(),
+        JOptionPane.showMessageDialog(this, gameController.getHighScoreString(),
                 "Highscore", JOptionPane.INFORMATION_MESSAGE);
     }
 

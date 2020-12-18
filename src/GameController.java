@@ -1,3 +1,7 @@
+import model.Tile;
+import model.User;
+import model.UserDatabase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,21 +9,21 @@ import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
 
-public class Game extends JFrame implements ActionListener {
+public class GameController extends JFrame implements ActionListener {
     private User redPlayer;
     private User yellowPlayer;
     private int tileCounter = 0;
     private final int[][] tileGrid = new int[6][7];
     private boolean isRedTurn = true;
 
-    private final LoginMenuPanel loginMenuPanel;
-    private final GameBoardPanel gameBoardPanel;
+    private final LoginMenuView loginMenuView;
+    private final GameBoardView gameBoardView;
 
-    public Game(LoginMenuPanel loginMenuPanel) {
-        this.loginMenuPanel = loginMenuPanel;
-        this.gameBoardPanel = new GameBoardPanel(this);
+    public GameController(LoginMenuView loginMenuView) {
+        this.loginMenuView = loginMenuView;
+        this.gameBoardView = new GameBoardView(this);
         setLayout(new BorderLayout());
-        add(BorderLayout.CENTER, loginMenuPanel);
+        add(BorderLayout.CENTER, loginMenuView);
         setTitle("Logga in spelare 1");
         setSize(new Dimension(1000, 800));
         setResizable(false);
@@ -32,7 +36,7 @@ public class Game extends JFrame implements ActionListener {
         for (int row = 0; row < 6; row++) {
             if (tileGrid[row][column] == Tile.EMPTY.getI()) {
                 tileGrid[row][column] = isRedTurn ? Tile.RED.getI() : Tile.YELLOW.getI();
-                gameBoardPanel.getButtons()[row][column].setIcon(isRedTurn ? GameBoardPanel.RED_TILE : GameBoardPanel.YELLOW_TILE);
+                gameBoardView.getButtons()[row][column].setIcon(isRedTurn ? GameBoardView.RED_TILE : GameBoardView.YELLOW_TILE);
 
                 tileCounter++;
                 if (hasWon(row, column)) {
@@ -162,7 +166,7 @@ public class Game extends JFrame implements ActionListener {
             yellowPlayer.getGameStats().addWin();
             redPlayer.getGameStats().addLoss();
         }
-        gameBoardPanel.getButtonList().forEach(e -> e.removeActionListener(this));
+        gameBoardView.getButtonList().forEach(e -> e.removeActionListener(this));
         UserDatabase.save();
         JOptionPane.showMessageDialog(this, getHighScoreString(), "Highscore", JOptionPane.INFORMATION_MESSAGE);
 
@@ -181,8 +185,8 @@ public class Game extends JFrame implements ActionListener {
     }
 
     private void startGame() {
-        remove(loginMenuPanel);
-        add(gameBoardPanel);
+        remove(loginMenuView);
+        add(gameBoardView);
     }
 
 
@@ -190,7 +194,7 @@ public class Game extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         for (int row = 0; row < 6; row++) {
             for (int column = 0; column < 7; column++) {
-                if (e.getSource() == gameBoardPanel.getButtons()[row][column]) {
+                if (e.getSource() == gameBoardView.getButtons()[row][column]) {
                     placeTile(column);
                 }
             }
@@ -215,8 +219,8 @@ public class Game extends JFrame implements ActionListener {
         return highScore.toString();
     }
 
-    public GameBoardPanel getGameBoardPanel() {
-        return gameBoardPanel;
+    public GameBoardView getGameBoardPanel() {
+        return gameBoardView;
     }
 }
 
