@@ -30,7 +30,7 @@ public class LoginMenuView extends JPanel implements ActionListener {
         add(blankLabel);
         add(userNameField);
         add(passwordField);
-        newUserButton.setBackground(new Color(252,35, 35));
+        newUserButton.setBackground(Color.GREEN);
         add(newUserButton);
         newUserButton.addActionListener(this);
         confirmLoginButton.setBackground(new Color(114, 197, 252));
